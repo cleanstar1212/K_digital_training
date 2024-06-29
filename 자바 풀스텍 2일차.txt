@@ -1,0 +1,132 @@
+자바 풀스텍 2일차
+
+-- Data, DataBase, DBMS, RDBMS
+-- DataBase : shared(공유), 실시간변경, 무결성, 보안 등
+-- RDBMS : MySQL, Oracle, DB2, MS-SQL
+-- SQL (Structed Query Language) : ANSI (미국표준), RDBMS 접근 사용하기 위한 표준 언어.
+
+## 데이터베이스의 데이터를 접근 사용
+-- SDLC(소프트웨어 개발 생명 주기) 분석 및 설계
+	> 1. 해당 업무(프로세스)에서 관리해야하는 대상객체를 추출 : Entity, 도메인(domain)
+	> 2. 도메인 구성하는 속성들 추출 : 컬럼, Attribute
+	> 3. 도메인 구성하는 데이터값을 분석 : 타입, 길이, 제약(constraint)
+
+-- 데이터를 저장하기 위한 물리적인 구조(틀) 필요 : 테이블(Table)
+	> 데이터들에 대한 물리적인 구조
+	> 컬럼(field, column)들로 구성
+	> 여러개의 행(row, record)들로 구성
+
+## SQL (Structed Query Language)
+-- 데이터를 접근 사용하기 위한 표준 언어
+-- 테이블 생성, 변경, 삭제
+-- 레코드 추가(Create), 조회(Retrive), 변경(Update), 삭제(Delete) : CRUD
+-- 사용자계정/데이터베이스 : 생성, 권한 부여, 권한 회수 등
+-- 트랜잭션 : 반영, 원상복구
+
+## SQL 종류 (구분)
+-- DDL(Data Definition Language)
+	>> 객체 생성, 변경, 삭제 
+	>> 객체 : 테이블, 인덱스, 뷰, 시퀀스 등
+	>> CREATE, ALTER, DROP
+-- DML(Data Manipulation Language)
+	>> 레코드 추가, 변경, 삭제, 조회
+	>> INSERT, UPDATE, DELETE, SELECT
+	>> DQL(Data Query Language) : SELECT 분리하는 경우 있음.
+-- TCL(Transaction Control Language)
+	>> 트랜잭션을 제어
+	>> commit, rollback, savepoint
+-- DCL(Data Control Language)
+	>> 데이터베이스 운영 제어
+	>> 사용자 생성, 권한 부여, 권한 제거
+	>> grant, revoke
+
+## SQL 식별자 규칙
+-- 대상 : 테이블명, 컬럼명, 제약명, 인덱스명, 뷰 등
+-- 영문자시작, 숫자 조합, _(밑줄), $
+-- 길이제한 : 64 max length (30자 이내 권장)
+-- 대소문자 구분하지 않음(기본) (단, 값을 비교하는 경우 데이터는 대소문자 구분함)
+-- 한글 사용은 가능(고객이 원하는 경우있음, 권장하지는 않음)
+-- 특수문자 가능(권장하지는 않음)
+-- 예약어(키워드) 사용 불가
+-- 공백불가
+
+## DML : SELECT
+-- 테이브 저장된 데이터 조회
+-- 수식결과 조회
+
+1. 기본 형식
+	(1). 
+	select * | 
+		[ DISTINCT ] 조회컬럼명1 "column alias", 컬럼명x | 
+		수식 | 
+		결과값을 반환하는 함수 호출() | 
+		(서브쿼리)
+	FROM 테이블명1 "table-alias" [, 테이블명x]
+	
+	(2).
+	-- from 구문 생략 가능 (단, mysql만 가능)
+	select 조회항목;
+	
+	-- 테이블이 없는 조회시에 더미테이블 사용
+	select 조회항목 from DUAL;
+
+2. 전체 형식
+	select ~ 조회대상
+	from ~ 테이블
+	where ~ condition-1 [and | or] condition-x
+	group by ~ 그룹핑대상컬럼
+	having 그룹핑-conditions
+	order by 정렬-columns [asc-올림기본 | desc-내림]
+	;
+
+## 빽틱( ` )
+-- `예약어를 사용자가 식별자로 사용하는 경우에 빽틱으로 지정 사용.
+
+## SQL Script File
+-- SQL 구문들을 배치형식으로 실행위한 배치파일
+-- 파일명 확장자 권장 : 파일명.sql
+-- ERD 설계한 후에 물리적인 데이터를 위한 배치파일(DB 구축 활용)
+-- 초기화 레코드를 위한 배치파일 등으로 활용
+-- 개발중에 반복 재사용 및 공유
+
+-- 실행방법 : 
+1. Workbench : script 파일 불러오고 > 번개 문양 클릭
+
+2. 콘솔모드 mysql>
+3. 명령프롬프트 dos>
+
+## select 정렬 조회
+	select ~
+	from ~
+	where ~
+	order by 정렬대상컬럼명1 정렬방법, 정렬대상컬럼명2 정렬방법 ... ;
+
+-- 정렬방법 : 
+	1. 올림차순 : asc (기본, 생략 가능)
+	2. 내림차순 : desc (내림, 명시적 지정)
+
+-- 올림차순 : 
+	>> 문자(a,b, .. , 가, 나, 다 .. 하)
+	>> 숫자, 날짜 (0,1,2,3, ... )
+	>> 급여가 높은 순서 : 내림
+	>> 급여가 작은 순서 : 올림
+	>> 장기근속 : 2000, 2001, ...., 2024 (올림)
+	>> 최신입사한 직원순서 : 2024, 2023, 2022 (내림)
+
+-- 정렬대상 
+	>> 컬럼명 
+	>> 컬럼에 대한 별명
+	>> select 항목들의 순서를 기준으로 지정 : 시작은 1번부터!!
+
+## 연산자
+-- 수식을 계산하는 기능
+-- 사칙연산자 : +, -, *, / (몫),  mod() 나머지연산대체함수
+-- 비교연산자(값, 날짜, 문자) : 같다(=), 다르다(!=, <>)
+	미만(<), 초과(>), 이하(<=), 이상(>=)
+-- 논리연산자(조건식) : where 조건식에서 사용
+	not (반대)
+	and (모두 참)
+	or (또는, 적어도 1개 이상 참이면 참)
+
+
+
